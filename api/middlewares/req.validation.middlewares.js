@@ -24,6 +24,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 For more information, please refer to <http://unlicense.org/> **/
 
 // verifies that the request contains all the required queries
+
 module.exports.verifyRequiredQueries = (requiredQueries) => {
     return (req, res, next) => {
         let missingQueries = [];

@@ -71,17 +71,19 @@ exports.searchPlaces = function (req, res) {
     /**
      * Yelp
      */
-
+    // ToDo: Add Yelp
+    // allProvidersPromises.push(yelpPromise)
 
     /**
      * Foursquare
      */
+    // ToDo: Add Foursquare
+    // allProvidersPromises.push(foursquarePromise)
 
 
-
-     /**
-      * Response
-      */
+    /**
+     * Response
+     */
     Promise.all(allProvidersPromises).then(() => {
         res.status(200).json({
             message: 'Search complete.',
