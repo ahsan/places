@@ -34,10 +34,27 @@ module.exports.verifyRequiredQueries = (requiredQueries) => {
         }
         if (missingQueries.length > 0) {
             return res.status(400).json({
-                message: `The request is missing some required queries. Following queries are required: ${missingQueries}.`
+                error: `The request is missing these required queries: ${missingQueries.join(", ")}.`
             });
         } else {
             next();
+        }
+    }
+}
+
+// validates the provided location coordinates
+module.exports.validateLocation = () => {
+    return (req, res, next) => {
+        if (Array.isArray(req.query.location) &&
+            req.query.location.length === 2 &&
+            req.query.location.every((x) => {return typeof Number(x) === 'number'})) {
+                // convert string array to number
+                req.query.location = req.query.location.map((elem) => Number(elem) )
+                next();
+        } else {
+            return res.status(400).json({
+                error: `The location query should be an array of two numbers.`
+            });
         }
     }
 }

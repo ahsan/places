@@ -25,9 +25,9 @@ For more information, please refer to <http://unlicense.org/> **/
 
 const express = require('express');
 const controller = require('./place.controller');
-const middlewares = require('../../middlewares/req.validation.middlewares');
+const mw = require('../../middlewares/req.validation.middlewares');
 
 let router = new express.Router();
-router.get('/', middlewares.verifyRequiredQueries(['search']), controller.searchPlaces);
+router.get('/', mw.verifyRequiredQueries(['search_string', 'location']), mw.validateLocation(), controller.searchPlaces);
 
 module.exports = router;

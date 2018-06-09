@@ -30,9 +30,35 @@ For more information, please refer to <http://unlicense.org/> **/
  * @return A JSON object containing response code, message and
  * current server time.
  */
+
+var googleMapsClient = require('@google/maps').createClient({
+    key: process.env.GOOGLE_PLACES_API_KEY,
+    Promise: Promise
+});
+
 exports.searchPlaces = function (req, res) {
-    console.log('HERRE')
-    res.status(200).json({
-        pong: 'search places'
-    });
+
+    let searchQuery = {
+        query: req.query.search_string,
+        location: req.query.location,
+
+        // default
+        language: 'en'
+    };
+
+    googleMapsClient.places(searchQuery).asPromise()
+        .then((searchResult) => {
+            console.log(searchResult);
+            res.status(200).json(searchResult);
+        })
+        .catch((err) => {
+            console.log('error')
+            res.status(400).json({
+                message: 'An error occured',
+                err: JSON.stringify(err)
+            });
+        })
+
+
+
 };
