@@ -41,7 +41,7 @@ module.exports = function (app) {
         // ping endpoint
         app.use(`/${version}/ping`, require(`../api/${version}/ping/ping.routes`));
 
-        // place endpoint
+        // places endpoint
         app.use(`/${version}/place`, require(`../api/${version}/place/place.routes`));
     }
 

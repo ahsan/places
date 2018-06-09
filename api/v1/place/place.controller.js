@@ -23,42 +23,104 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
 
-/**
- * Returns 'pong' message with the current time to a ping request.
- * @param req: the request object
- * @param res: the response object
- * @return A JSON object containing response code, message and
- * current server time.
- */
+let winston = require('../../../config/winston.config');
+let googleHelper = require('./google.helper');
 
-var googleMapsClient = require('@google/maps').createClient({
+let googleMapsClient = require('@google/maps').createClient({
     key: process.env.GOOGLE_PLACES_API_KEY,
     Promise: Promise
 });
 
+/**
+ * Returns places search results for the provided query.
+ * @param req: the request object
+ * @param res: the response object
+ * @return A JSON object containing response code, message and
+ * search result.
+ */
+
 exports.searchPlaces = function (req, res) {
 
-    let searchQuery = {
+    // this array holds the promises of all requests made to different providers
+    let allProvidersPromises = [];
+    // result objects from all the providers will be pushed in this array
+    let returnArr = [];
+
+    /**
+     * GOOGLE
+     */
+    const googleSearchQuery = {
         query: req.query.search_string,
         location: req.query.location,
+        language: 'en'
+    };
+    let googlePromise = googleMapsClient.places(googleSearchQuery).asPromise();
 
-        // default
+    // push the google promise in the promises array
+    allProvidersPromises.push(googlePromise);
+
+    // make the call
+    googlePromise.then((googleSearchResult) => {
+        // condition the data and push to the return array
+        returnArr.push(googleHelper.conditionData(googleSearchResult));
+    });
+    // no catch call here
+    // all the errors are caught by the Promise.all
+
+
+    /**
+     * Yelp
+     */
+
+
+    /**
+     * Foursquare
+     */
+
+
+
+     /**
+      * Response
+      */
+    Promise.all(allProvidersPromises).then(() => {
+        res.status(200).json({
+            message: 'Search complete.',
+            place: returnArr
+        });
+    }).catch( (err) => {
+        winston.error(
+            `Error:${JSON.stringify(req.query)}\nQuery: ${JSON.stringify(req.query)}\nResult:${JSON.stringify(returnArr)}`
+        );
+        res.status(400).json({
+            message: 'Something went wrong.',
+            err: JSON.stringify(err)
+        });
+    });
+
+};
+
+
+
+/**
+ * Gets the detail about the provided place using the Google Places API
+ * @param {*} req
+ * @param {*} res
+ */
+exports.detailGoogle = function (req, res) {
+    const googleSearchQuery = {
+        placeid: req.query.id,
         language: 'en'
     };
 
-    googleMapsClient.places(searchQuery).asPromise()
-        .then((searchResult) => {
-            console.log(searchResult);
-            res.status(200).json(searchResult);
-        })
-        .catch((err) => {
-            console.log('error')
-            res.status(400).json({
-                message: 'An error occured',
-                err: JSON.stringify(err)
-            });
-        })
-
-
-
+    googleMapsClient.place(googleSearchQuery).asPromise().then((placeDetail) => {
+        res.status(200).json({
+            message: 'Search complete.',
+            place: googleHelper.conditionDetailData(placeDetail)
+        });
+    }).catch((err) => {
+        res.status(400).json({
+            message: 'Something went wrong.',
+            err: err
+        });
+    });
 };

@@ -23,8 +23,12 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
 
+let ip = require('ip');
+
 module.exports = {
     apiVersions: [
         'v1'
-    ]
+    ],
+    latestApiVersion: 'v1',
+    serverAddress: `http://${ip.address()}:${process.env.API_PORT}`
 }

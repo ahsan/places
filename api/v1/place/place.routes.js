@@ -29,5 +29,6 @@ const mw = require('../../middlewares/req.validation.middlewares');
 
 let router = new express.Router();
 router.get('/', mw.verifyRequiredQueries(['search_string', 'location']), mw.validateLocation(), controller.searchPlaces);
+router.get('/detail/google', mw.verifyRequiredQueries(['id']), controller.detailGoogle);
 
 module.exports = router;
