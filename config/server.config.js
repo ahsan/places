@@ -59,7 +59,7 @@ module.exports = function (expressApp) {
   // handle succesful server init
   server.on('listening', function () {
     expressApp.emit('appStarted');
-    winston.info('Server started on port: ', port);
+    winston.info(`Server started on address: http://localhost:${port}`);
   });
 
   return server;

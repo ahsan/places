@@ -23,20 +23,40 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
 
-// load the environment variables before doing anything else
-require('dotenv').config({path: './.env'});
-require('./config/check.environment')();
-
-const express = require('express');
-
-// create an express app
-const app = express();
-
-// start the server
-require('./config/server.config')(app);
 
 
-// apply express configuration
-require('./config/express.config')(app);
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const should = chai.should();
+const winston = require('../../config/winston.config');
 
-module.exports = app;
+const app = require('../../app');
+const constants = require('../../config/constants')
+const apiVerPrefix = constants.latestApiVersion;
+
+chai.use(chaiHttp);
+
+// Wait for the server to get up
+// before(function (done) {
+//     app.on("appStarted", function () {
+//         done();
+//     });
+// });
+
+/**
+ * Unit Tests for /ping endpoint (server health check)
+ */
+describe('Ping', function () {
+    /**
+     * Server health check
+     */
+    it('should get a pong message in return', function (done) {
+        chai.request(app)
+            .get(`/${apiVerPrefix}/ping`)
+            .end(function (err, res) {
+                res.should.have.status(200);
+                res.body.pong.should.be.a('string');
+                done();
+            });
+    });
+});

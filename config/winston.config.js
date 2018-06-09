@@ -34,7 +34,7 @@ const logDirectory = 'logs';
 if (!fs.existsSync(logDirectory)) {
   fs.mkdirSync(logDirectory);
 }
-const logs = path.join(logDirectory, 'logistics.log');
+const logs = path.join(logDirectory, 'places.log');
 
 // set the level depending on the process.env
 let logLevel = process.env.LOG_LEVEL || 'error';

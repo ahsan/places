@@ -15,7 +15,7 @@ The application is mainly structured around the API endpoints. A brief descripti
 | api       | Contains the server code for handling requests made on the different endpoints. Each endpoint has its own separate routes, middleware, helper and controller files.|
 | config    | Contains files that deal with project wide configuration.                                                                                                          |
 | logs      | Contains the server logs.                                                                                                                                          |
-| tests     | Contains all the unit tests.                                                                                                                                       |
+| spec      | Contains all the tests.                                                                                                                                       |
 
 
 ## Logging
@@ -45,12 +45,23 @@ docker build --tag places:v1 .
 ```
 3. Run the container exposing the port defined in the .env file earlier
 ```shell
-docker run -it --publish 3000:3000 places:v1
+docker run -d --publish 3000:3000 places:v1
 ```
 4. Make a curl call to check server health
 ```shell
 curl http://localhost:3000/v1/ping
 ```
+
+5. Stopping the application:
+```shell
+docker ps -a
+docker exec -it <container name> sh
+pm2 list
+pm2 kill
+docker rm <container name>
+```
+
+
 
 ## Manually
 1. Populate the following variables inside the .env file
@@ -68,4 +79,23 @@ npm install
 npm start
 ```
 
+# Running the e2e tests
+## Using Docker
+1. Build the test image
+```shell
+docker build ./spec/tests.Dockerfile -t places_test:v1 .
+```
+2. Run the container
+```shell
+docker run -it places_test:v1
+```
 
+## Manually
+1. Install mocha globally
+```shell
+npm install -g mocha
+```
+2. Run the testing script
+```shell
+npm run test
+```

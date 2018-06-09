@@ -38,7 +38,6 @@ let googleMapsClient = require('@google/maps').createClient({
  * @return A JSON object containing response code, message and
  * search result.
  */
-
 exports.searchPlaces = function (req, res) {
 
     // this array holds the promises of all requests made to different providers
@@ -62,7 +61,7 @@ exports.searchPlaces = function (req, res) {
     // make the call
     googlePromise.then((googleSearchResult) => {
         // condition the data and push to the return array
-        returnArr.push(googleHelper.conditionData(googleSearchResult));
+        Array.prototype.push.apply(returnArr, googleHelper.conditionData(googleSearchResult));
     });
     // no catch call here
     // all the errors are caught by the Promise.all
