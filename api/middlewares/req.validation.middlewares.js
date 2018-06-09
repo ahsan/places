@@ -23,37 +23,21 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
 
-const winston = require('./winston.config');
-const constants = require('./constants');
-
-/**
- *
- * @param {*} app - The Express app object
- */
-module.exports = function (app) {
-
-    // bind routes to all api endpoints of all version
-    // for simplicity, assuming that all the versions have same endpoints
-    for (const version of constants.apiVersions) {
-
-        winston.debug(`Binding ${version} routes`);
-
-        // ping endpoint
-        app.use(`/${version}/ping`, require(`../api/${version}/ping/ping.routes`));
-
-        // place endpoint
-        app.use(`/${version}/place`, require(`../api/${version}/place/place.routes`));
+// verifies that the request contains all the required queries
+module.exports.verifyRequiredQueries = (requiredQueries) => {
+    return (req, res, next) => {
+        let missingQueries = [];
+        for(const requiredQuery of requiredQueries) {
+            if(!req.query[requiredQuery]) {
+                missingQueries.push(requiredQuery);
+            }
+        }
+        if (missingQueries.length > 0) {
+            return res.status(400).json({
+                message: `The request is missing some required queries. Following queries are required: ${missingQueries}.`
+            });
+        } else {
+            next();
+        }
     }
-
-    // default route
-    app.route('/*').get((req, res) => {
-        winston.verbose('Illegal API endpoint hit: ', req.url);
-
-        // respond with 404
-        res.status(404);
-        res.json({
-            message: 'API endpoint not found.'
-        });
-
-    });
-};
+}

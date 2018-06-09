@@ -28,21 +28,21 @@ const path = require('path');
 const fs = require('fs');
 
 // logs directory
-const log_directory = 'logs';
+const logDirectory = 'logs';
 
 // make the directory structure for logs
-if (!fs.existsSync(log_directory)) {
-  fs.mkdirSync(log_directory);
+if (!fs.existsSync(logDirectory)) {
+  fs.mkdirSync(logDirectory);
 }
-const logs = path.join(log_directory, 'logistics.log');
+const logs = path.join(logDirectory, 'logistics.log');
 
 // set the level depending on the process.env
-let log_level = process.env.LOG_LEVEL || 'error';
+let logLevel = process.env.LOG_LEVEL || 'error';
 
 const logger = new winston.Logger({
   transports: [
     new winston.transports.Console({
-      level: log_level
+      level: logLevel
     }),
     new winston.transports.File({
       filename: logs,

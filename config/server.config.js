@@ -28,20 +28,20 @@ const winston = require('./winston.config');
 
 /**
  *
- * @param {*} express_app - The Express app object
+ * @param {*} expressApp - The Express app object
  * @param {*} port - The port for API server
  */
-module.exports = function(express_app) {
+module.exports = function (expressApp) {
 
   // read the api port from env variables
   const port = process.env.API_PORT || 3000;
 
   // create an http server
-  const server = http.createServer(express_app);
+  const server = http.createServer(expressApp);
   server.listen(port);
 
   // handle error
-  server.on('error', function(error) {
+  server.on('error', function (error) {
     switch (error.code) {
       case 'EACCES':
         winston.error(`Port '${port}' is not accessible. Exiting.`);
@@ -57,11 +57,10 @@ module.exports = function(express_app) {
   });
 
   // handle succesful server init
-  server.on('listening', function() {
-    express_app.emit('appStarted');
+  server.on('listening', function () {
+    expressApp.emit('appStarted');
     winston.info('Server started on port: ', port);
   });
 
   return server;
 }
-

@@ -23,37 +23,11 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
 
-const winston = require('./winston.config');
-const constants = require('./constants');
+const express = require('express');
+const controller = require('./place.controller');
+const middlewares = require('../../middlewares/req.validation.middlewares');
 
-/**
- *
- * @param {*} app - The Express app object
- */
-module.exports = function (app) {
+let router = new express.Router();
+router.get('/', middlewares.verifyRequiredQueries(['search']), controller.searchPlaces);
 
-    // bind routes to all api endpoints of all version
-    // for simplicity, assuming that all the versions have same endpoints
-    for (const version of constants.apiVersions) {
-
-        winston.debug(`Binding ${version} routes`);
-
-        // ping endpoint
-        app.use(`/${version}/ping`, require(`../api/${version}/ping/ping.routes`));
-
-        // place endpoint
-        app.use(`/${version}/place`, require(`../api/${version}/place/place.routes`));
-    }
-
-    // default route
-    app.route('/*').get((req, res) => {
-        winston.verbose('Illegal API endpoint hit: ', req.url);
-
-        // respond with 404
-        res.status(404);
-        res.json({
-            message: 'API endpoint not found.'
-        });
-
-    });
-};
+module.exports = router;

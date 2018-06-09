@@ -23,37 +23,16 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
 
-const winston = require('./winston.config');
-const constants = require('./constants');
-
 /**
- *
- * @param {*} app - The Express app object
+ * Returns 'pong' message with the current time to a ping request.
+ * @param req: the request object
+ * @param res: the response object
+ * @return A JSON object containing response code, message and
+ * current server time.
  */
-module.exports = function (app) {
-
-    // bind routes to all api endpoints of all version
-    // for simplicity, assuming that all the versions have same endpoints
-    for (const version of constants.apiVersions) {
-
-        winston.debug(`Binding ${version} routes`);
-
-        // ping endpoint
-        app.use(`/${version}/ping`, require(`../api/${version}/ping/ping.routes`));
-
-        // place endpoint
-        app.use(`/${version}/place`, require(`../api/${version}/place/place.routes`));
-    }
-
-    // default route
-    app.route('/*').get((req, res) => {
-        winston.verbose('Illegal API endpoint hit: ', req.url);
-
-        // respond with 404
-        res.status(404);
-        res.json({
-            message: 'API endpoint not found.'
-        });
-
+exports.searchPlaces = function (req, res) {
+    console.log('HERRE')
+    res.status(200).json({
+        pong: 'search places'
     });
 };
