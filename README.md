@@ -1,5 +1,6 @@
-<center><img src="logo.png" alt="Girl in a jacket" width="300"></center>
-
+<div align="center">
+    <img src="logo.png" alt="Girl in a jacket" width="300">
+</div>
 
 # Description
 Sample Node.js application implementing RESTful API for getting information about places.
