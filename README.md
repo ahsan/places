@@ -83,7 +83,7 @@ npm start
 ## Using Docker
 1. Build the test image
 ```shell
-docker build ./spec/tests.Dockerfile -t places_test:v1 .
+docker build -f ./spec/tests.Dockerfile -t places_test:v1 .
 ```
 2. Run the container
 ```shell
