@@ -63,6 +63,28 @@ describe('Place', function () {
     });
 
 
+    it('should not get a list of places without specifying search_string', function (done) {
+        chai.request(app)
+            .get(`/${apiVerPrefix}/place?location[0]=31&location[1]=74`)
+            .end(function (err, res) {
+                res.should.have.status(400);
+                res.body.error.should.be.a('string');
+                done();
+            });
+    });
+
+
+    it('should not get a list of places without specifying location array', function (done) {
+        chai.request(app)
+            .get(`/${apiVerPrefix}/place?search_string=mcdonalds`)
+            .end(function (err, res) {
+                res.should.have.status(400);
+                res.body.error.should.be.a('string');
+                done();
+            });
+    });
+
+
     /**
      * Get details about one particular place
      */
@@ -73,6 +95,17 @@ describe('Place', function () {
                 res.should.have.status(200);
                 res.body.message.should.be.a('string');
                 res.body.place.should.be.a('object');
+                done();
+            });
+    });
+
+
+    it('should not get details about a place without specifying id', function (done) {
+        chai.request(app)
+            .get(`/${apiVerPrefix}/place/detail/google`)
+            .end(function (err, res) {
+                res.should.have.status(400);
+                res.body.error.should.be.a('string');
                 done();
             });
     });
