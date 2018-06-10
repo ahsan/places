@@ -92,7 +92,7 @@ exports.searchPlaces = function (req, res) {
         winston.error(
             `Error:${JSON.stringify(req.query)}\nQuery: ${JSON.stringify(req.query)}\nResult:${JSON.stringify(returnArr)}`
         );
-        res.status(400).json({
+        res.status(500).json({
             message: 'Something went wrong.',
             err: JSON.stringify(err)
         });
@@ -119,7 +119,7 @@ exports.detailGoogle = function (req, res) {
             place: googleHelper.conditionDetailData(placeDetail)
         });
     }).catch((err) => {
-        res.status(400).json({
+        res.status(500).json({
             message: 'Something went wrong.',
             err: err
         });
